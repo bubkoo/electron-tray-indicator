@@ -1,0 +1,54 @@
+{
+  "name": "electron-tray-indicator",
+  "version": "0.1.0",
+  "description": "A progress indicator in tray for your Electron app.",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "cp ./src/index.html ./lib/ && tsc",
+    "build:watch": "cp ./src/index.html ./lib/ && tsc -w",
+    "lint": "tslint -c tslint.json -p tsconfig.json ./src/**/*.ts",
+    "example1": "electron ./demo/example1.js",
+    "example2": "electron ./demo/example2.js",
+    "example3": "electron ./demo/example3.js",
+    "example4": "electron ./demo/example4.js",
+    "example5": "electron ./demo/example5.js",
+    "example6": "electron ./demo/example6.js",
+    "example7": "electron ./demo/example7.js",
+    "example8": "electron ./demo/example8.js",
+    "start": "npm-run-all -p example*",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "indicator",
+    "progress",
+    "animation",
+    "electron",
+    "tray",
+    "app"
+  ],
+  "author": {
+    "name": "bubkoo.wy",
+    "email": "bubkoo.wy@gmail.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bubkoo/electron-tray-indicator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bubkoo/electron-tray-indicator/issues"
+  },
+  "homepage": "https://github.com/bubkoo/electron-tray-indicator#readme",
+  "devDependencies": {
+    "@types/invariant": "^2.2.29",
+    "@types/uuid": "^3.4.4",
+    "electron": "^4.1.4",
+    "husky": "^1.3.1",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^2.6.3",
+    "tslint": "^5.16.0",
+    "tslint-config-airbnb": "^5.11.1",
+    "typescript": "^3.4.4"
+  },
+  "dependencies": {}
+}
