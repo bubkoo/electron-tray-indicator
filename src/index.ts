@@ -12,7 +12,7 @@ function getDefaultColor() {
     : '#191919'
 }
 
-export function getOptions(options: Options): Options {
+function getOptions(options: Options): Options {
   const opts: Options = {
     size: 22,
     type: 'pie',
@@ -113,7 +113,7 @@ export interface ProgressOptions extends Options {
   progress: number
 }
 
-export function progressTick(options: ProgressOptions) {
+export function progress(options: ProgressOptions) {
   if (options.progress == null) {
     console.error('`progress` should be specified.')
   }
@@ -130,7 +130,7 @@ export function progressTick(options: ProgressOptions) {
   return updateProgress(getOptions(opts))
 }
 
-export function indeterminateTick(options: Options) {
+export function indeterminate(options: Options) {
   const opts: Options = {
     ...options,
     indeterminate: true,

@@ -3,18 +3,26 @@
   "version": "0.1.0",
   "description": "A progress indicator in tray for your Electron app.",
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib/*.d.ts",
+    "lib/*.js"
+  ],
+  "directories": {
+    "lib": "lib/"
+  },
   "scripts": {
     "build": "cp ./src/index.html ./lib/ && tsc",
     "build:watch": "cp ./src/index.html ./lib/ && tsc -w",
     "lint": "tslint -c tslint.json -p tsconfig.json ./src/**/*.ts",
-    "example1": "electron ./demo/example1.js",
-    "example2": "electron ./demo/example2.js",
-    "example3": "electron ./demo/example3.js",
-    "example4": "electron ./demo/example4.js",
-    "example5": "electron ./demo/example5.js",
-    "example6": "electron ./demo/example6.js",
-    "example7": "electron ./demo/example7.js",
-    "example8": "electron ./demo/example8.js",
+    "example1": "electron ./examples/example1.js",
+    "example2": "electron ./examples/example2.js",
+    "example3": "electron ./examples/example3.js",
+    "example4": "electron ./examples/example4.js",
+    "example5": "electron ./examples/example5.js",
+    "example6": "electron ./examples/example6.js",
+    "example7": "electron ./examples/example7.js",
+    "example8": "electron ./examples/example8.js",
     "start": "npm-run-all -p example*",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

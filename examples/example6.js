@@ -4,7 +4,7 @@ const createApp = require('./createApp')
 function start(tray) {
   let progress = 0
   const tick = () => {
-    indicator.progressTick({
+    indicator.progress({
       progress,
       tray: tray,
       type: 'circle',

@@ -2,7 +2,7 @@ const indicator = require('../lib/index')
 const createApp = require('./createApp')
 
 function start(tray) {
-  indicator.indeterminateTick({
+  indicator.indeterminate({
     tray,
     type: 'circle',
     circle: {
