@@ -27,7 +27,7 @@ function createWindow(size: number) {
   // window.webContents.openDevTools()
 
   window.setIgnoreMouseEvents(true)
-  window.loadURL(`file://${__dirname}/index.html`)
+  window.loadURL(`file://${__dirname}/render.html`)
 }
 
 function ensureWindow(size: number) {

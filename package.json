@@ -5,6 +5,8 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "files": [
+    "src",
+    "examples",
     "lib/*.d.ts",
     "lib/*.js"
   ],
@@ -12,8 +14,9 @@
     "lib": "lib/"
   },
   "scripts": {
-    "build": "cp ./src/index.html ./lib/ && tsc",
-    "build:watch": "cp ./src/index.html ./lib/ && tsc -w",
+    "clean": "rimraf ./lib",
+    "build": "npm run clean && tsc && cp ./src/render.html ./lib/",
+    "build:watch": "cp ./src/render.html ./lib/ && tsc -w",
     "lint": "tslint -c tslint.json -p tsconfig.json ./src/**/*.ts",
     "example1": "electron ./examples/example1.js",
     "example2": "electron ./examples/example2.js",

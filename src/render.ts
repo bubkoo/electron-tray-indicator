@@ -1,6 +1,6 @@
 import { Tray, ipcRenderer } from 'electron'
 
-export type IndicatorStyle = 'pie' | 'circle'
+export type IndicatorType = 'pie' | 'circle'
 export type IndicatorDirection = 'clockwise' | 'anticlockwise'
 
 export interface OutlineOptions {
@@ -10,32 +10,37 @@ export interface OutlineOptions {
 }
 
 export interface TextOptions {
-  text?: string,
-  show?: boolean,
-  color?: string,
-  font?: string,
+  show?: boolean
+  render?: string
+  color?: string
+  font?: string
+  fontSize?: number
+  fontStyle?: 'normal' | 'italic' | 'oblique'
+  fontVariant?: 'normal' | 'small-caps'
+  // tslint:disable-next-line
+  fontWeight?: 'normal' | 'bold' | 'bolder' | 'lighter' | '100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900'
+  fontFamily?: string
 }
 
 export interface PieOptions {
-  fillColor?: string,
-  backgroundColor?: string,
-  size?: number,
+  fillColor?: string
+  backgroundColor?: string
+  arc?: number
 }
 
 export interface CircleOptions {
+  lineCap?: CanvasLineCap,
   strockWidth?: number,
   strockColor?: string,
-  lineCap?: CanvasLineCap,
   backgroundColor?: string,
-  size?: number,
+  arc?: number,
 }
 
 export interface Options {
   tray: Tray,
-  progress?: number,
-  indeterminate?: boolean,
+  progress?: false | number,
   size?: number,
-  type?: IndicatorStyle,
+  type?: IndicatorType,
   direction?: IndicatorDirection,
   text?: TextOptions,
   pie?: PieOptions,
@@ -111,7 +116,7 @@ class Graph {
 
   private drawProgress() {
     const deg = Math.PI / 180
-    const progress = this.options.progress! / 100
+    const progress = (this.options.progress as number) / 100
     const anticlockwise = this.options.direction === 'anticlockwise'
 
     const sDeg = -90 * deg
@@ -131,17 +136,42 @@ class Graph {
     if (textOptions.show) {
       const ctx = this.ctx
       const center = this.center
-      const progress = Math.round(this.options.progress!)
+      const progress = Math.round(this.options.progress as number)
 
-      const text = textOptions.text == null
+      const text = textOptions.render == null
         ? `${progress}%`
-        : textOptions.text.replace(/\{\{\s*progress\s*\}\}/g, `${progress}`)
+        : textOptions.render.replace(/\{\{\s*progress\s*\}\}/g, `${progress}`)
+
+      let font = ''
+      if (textOptions.fontStyle) {
+        font += ` ${textOptions.fontStyle}`
+      }
+
+      if (textOptions.fontVariant) {
+        font += ` ${textOptions.fontVariant}`
+      }
+
+      if (textOptions.fontWeight) {
+        font += ` ${textOptions.fontWeight}`
+      }
+
+      if (textOptions.fontSize) {
+        font += ` ${textOptions.fontSize}px`
+      }
+
+      if (textOptions.fontFamily) {
+        font += ` ${textOptions.fontFamily}`
+      }
+
+      font = font.trim()
 
       ctx.save()
 
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
-      ctx.font = textOptions.font!
+      if (font) {
+        ctx.font = font
+      }
       ctx.fillStyle = textOptions.color!
 
       ctx.fillText(text, center.x, center.y)
@@ -177,11 +207,18 @@ class Graph {
   private drawIndeterminate() {
     const deg = Math.PI / 180
     const anticlockwise = this.options.direction === 'anticlockwise'
-    const size = this.options.type === 'pie'
-      ? this.options.pie!.size!
+    let size = this.options.type === 'pie'
+      ? this.options.pie!.arc!
       : this.options.type === 'circle'
-        ? this.options.circle!.size!
+        ? this.options.circle!.arc!
         : 0
+
+    if (size < 0) {
+      size = 0
+    }
+    if (size > 360) {
+      size = size % 360
+    }
 
     const sDeg = anticlockwise
       ? (-90 - this.angle) * deg

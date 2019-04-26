@@ -13,7 +13,7 @@ function getDefaultColor() {
 }
 
 function getOptions(options: Options): Options {
-  const opts: Options = {
+  const result: Options = {
     size: 22,
     type: 'pie',
     direction: 'clockwise',
@@ -25,115 +25,83 @@ function getOptions(options: Options): Options {
     ...options,
   }
 
+  const { outline, text, pie, circle } = result
   const defaultColor = getDefaultColor()
-  const { outline, text, pie, circle } = opts
 
   if (outline) {
     if (outline.show == null) {
-      if (opts.type === 'pie') {
+      if (result.type === 'pie') {
         outline.show = true
       }
     }
+  }
 
-    if (outline.strockWidth == null) {
-      outline.strockWidth = 1
-    }
-
-    if (outline.strockColor == null) {
-      outline.strockColor = defaultColor
-    }
+  result.outline = {
+    strockWidth: 1,
+    strockColor: defaultColor,
+    ...outline,
   }
 
   if (text) {
     if (text.show == null) {
-      if (opts.type === 'pie') {
-        text.show = false
-      } else if (opts.type === 'circle') {
+      if (result.type === 'circle') {
         text.show = true
       }
     }
 
-    if (text.text == null) {
-      text.text = options.indeterminate ? '' : '{{ progress }}%'
+    if (options.type === 'pie') {
+      text!.show = false
     }
 
-    if (text.color == null) {
-      text.color = defaultColor
-    }
-
-    if (text.font == null) {
-      text.font = 'normal normal 5px sans-serif'
+    if (text.show && text.render == null) {
+      text.render = options.progress === false ? '' : '{{ progress }}%'
     }
   }
 
-  if (pie) {
-    if (pie.fillColor == null) {
-      pie.fillColor = defaultColor
-    }
-
-    if (pie.size == null || pie.size < 0) {
-      pie.size = 60
-    }
-
-    if (pie.size > 360) {
-      pie.size = pie.size % 360
-    }
+  result.text = {
+    color: defaultColor,
+    fontFamily: 'arial',
+    fontSize: 5,
+    ...text,
   }
 
-  if (circle) {
-    if (circle.strockWidth == null) {
-      circle.strockWidth = 2
-    }
-
-    if (circle.strockColor == null) {
-      circle.strockColor = defaultColor
-    }
-
-    if (circle.lineCap == null) {
-      circle.lineCap = 'round'
-    }
-
-    if (circle.size == null || circle.size < 0) {
-      circle.size = 100
-    }
-
-    if (circle.size > 360) {
-      circle.size = circle.size % 360
-    }
+  result.pie = {
+    fillColor: defaultColor,
+    arc: 60,
+    ...pie,
   }
 
-  if (options.type === 'pie') {
-    options.text!.show = false
+  result.circle = {
+    lineCap: 'round',
+    strockWidth: 2,
+    strockColor: defaultColor,
+    arc: 100,
+    ...circle,
   }
 
-  return opts
+  return result
 }
 
-export interface ProgressOptions extends Options {
-  progress: number
-}
-
-export function progress(options: ProgressOptions) {
+export function progress(options: Options) {
   if (options.progress == null) {
     console.error('`progress` should be specified.')
   }
 
-  if (options.progress < 0 || options.progress > 100) {
+  if (
+    options.progress === false ||
+    (options.progress as number) < 0 ||
+    (options.progress as number) > 100
+  ) {
     console.error('`progress` should within the range of 0 to 100')
   }
 
-  const opts: Options = {
-    ...options,
-    indeterminate: false,
-  }
-
-  return updateProgress(getOptions(opts))
+  return updateProgress(getOptions(options))
 }
 
 export function indeterminate(options: Options) {
   const opts: Options = {
     ...options,
-    indeterminate: true,
+    progress: false,
   }
 
   return startIndeterminate(getOptions(opts))
